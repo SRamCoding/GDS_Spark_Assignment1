@@ -1,0 +1,2 @@
+- El archivo Ass1_Querys.ipynb debe crearse dentro del cluster de dataproc 
+- Commands.txt son los comandos de hive usados
