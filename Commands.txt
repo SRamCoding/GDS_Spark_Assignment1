@@ -1,0 +1,69 @@
+Sentencias para copiar los archivos al namenode local system files:    
+    gcloud compute scp ./ad_campaigns_data.json sebastian_r_07_12_02@gds-cluster-m:
+    gcloud compute scp ./store_data.json sebastian_r_07_12_02@gds-cluster-m:
+    gcloud compute scp ./user_profile_data.json sebastian_r_07_12_02@gds-cluster-m:
+
+Creamos el directorio en hdfs para esta asignación:
+    hdfs dfs -mkdir /user/spark/ass1
+    
+Colocamos los archivos al directorio creado:
+    hdfs dfs -put ad_campaigns_data.json /user/spark/ass1
+    hdfs dfs -put store_data.json /user/spark/ass1
+    hdfs dfs -put user_profile_data.json /user/spark/ass1
+
+Creamos los directorios de los ouptputs en hdfs para esta asignación:
+    hdfs dfs -mkdir /user/spark/ass1/q1
+    hdfs dfs -mkdir /user/spark/ass1/q2
+    hdfs dfs -mkdir /user/spark/ass1/q3
+
+Creamos las tablas
+
+    /*
+        En CADA SESSION DE HIVE, se debe agregar el siguiente comando:
+        ADD JAR hdfs:///user/hive/jars/json-serde.jar;
+    */
+
+    -q1-
+    CREATE EXTERNAL TABLE q1_events (
+        campaign_id STRING,
+        date_ STRING,
+        hour STRING,
+        os_type STRING,
+        impression INT,
+        click INT,
+        video_ad INT
+    )
+    ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
+    LOCATION 'hdfs:///user/spark/ass1/q1';
+
+    SELECT * FROM q1_events LIMIT 10;
+
+    -q2-
+    CREATE EXTERNAL TABLE q2_events (
+        campaign_id STRING,
+        date_ STRING,
+        hour STRING,
+        store_name STRING,
+        impression INT,
+        click INT,
+        video_ad INT
+    )
+    ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
+    LOCATION 'hdfs:///user/spark/ass1/q2';
+
+    SELECT * FROM q2_events LIMIT 10;
+
+    -q3-
+    CREATE EXTERNAL TABLE q3_events (
+        campaign_id STRING,
+        date_ STRING,
+        hour STRING,
+        gender STRING,
+        impression INT,
+        click INT,
+        video_ad INT
+    )
+    ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
+    LOCATION 'hdfs:///user/spark/ass1/q3';
+    
+    SELECT * FROM q3_events LIMIT 10;
